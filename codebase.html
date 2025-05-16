@@ -12,7 +12,7 @@
       body {
         padding-top: 90px;
         margin: 0;
-<!--        padding: 0;-->
+        padding: 0;
         font-family: 'DM Sans', sans-serif;
         background-color: #f4f6fb;
       }
@@ -21,11 +21,12 @@
       .navbar {
         display: flex;
         justify-content: space-between;
+        flex-wrap: wrap;
         align-items: center;
         padding: 10px 20px;
         background: radial-gradient(50% 50% at 50% 50%, #ffffff 15%, #dee7f5 85%);
         position: fixed;
-        z-index: 999; /* ensures it's on top of other elements */
+        z-index: -999; /*ensures it's on top of other elements*/
         top: 0;
         left: 0;
         width: 100%;
@@ -35,6 +36,7 @@
       .left-section {
         display: flex;
         align-items: center;
+        justify-content: center;
         flex-direction: column;
         text-align: center;
       }
@@ -118,9 +120,9 @@
         display: block;
       }
       .privacy {
-      display: flex;
-      align-item: center;
-      text-item: center;
+        display: flex;
+        align-items: center;
+        text-align: center;
       }
       .privacy-button {
         display: block;
@@ -152,7 +154,7 @@
       cursor: pointer;
       text-align: center;
       margin-top: 8px;
-      align-item: center;
+      align-items: center;
       margin-left: 550px;
       margin-left: 600px;
       }
@@ -228,12 +230,12 @@
       margin-left: 438px;
       }
 
-<!--      label {-->
+/* <!--      label {-->
 <!--        font-size: 18px;-->
 <!--        margin-bottom: 10px;-->
 <!--        display: block;-->
 <!--        color: #333;-->
-<!--      }-->
+<!--      }--> */
 
       select {
         font-size: 16px;

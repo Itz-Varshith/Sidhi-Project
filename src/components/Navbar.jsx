@@ -2,8 +2,8 @@ import React from "react";
 
 const Navbar = () => {
   return (
-    <nav className="flex justify-between items-center top-0 left-0 px-3 py-3 m-0 w-full bg-[#E5ECE9]">
-      <div>
+    <nav className=" navbar flex justify-between flex-col sm:flex-row items-center top-0 left-0 px-3 py-3 m-0 w-full bg-[#E5ECE9]">
+      <div className="">
         <div className=" flex justify-between ">
           <a href="https://www.iiti.ac.in">
             <img
@@ -30,7 +30,7 @@ const Navbar = () => {
         <h1 className="text-center"> CHARAK DIGITAL TWIN PLATFORM</h1>
       </div>
       <div className="w-[80%] p-3 text-center text-3xl font-extrabold">
-        <h1 >DATA COLLECTION INTERFACE</h1>
+        <h1 >Data Collection Interface</h1>
       </div>
     </nav>
   );

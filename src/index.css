@@ -1,4 +1,19 @@
 @import "tailwindcss";
+
+/* @import url(''); */
 body{
     font-family: "DM sans",sans-serif;
+}
+
+.navbar{
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    padding: 10px 20px;
+    background: radial-gradient(50% 50% at 50% 50%, #ffffff 15%, #dee7f5 85%);
+    position: fixed;
+    z-index: 999; /* ensures it's on top of other elements */
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
