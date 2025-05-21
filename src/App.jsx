@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, Router, Routes, Route } from "react-router-dom";
-import Home from "./Home.jsx";
-import Annotate from "./Annotate.jsx";
+import Home from "./pages/Home.jsx";
+import Annotate from "./pages/Annotate.jsx";
 import Navbar from "./components/Navbar.jsx";
 
 
