@@ -1,6 +1,6 @@
 import React from 'react'
 import Camera from '../components/Camera.jsx';
-import Paramonitor from '../components.jsx';
+import Paramonitor from '../components/Paramonitor.jsx';
 import RecentLogs from '../components/RecentLogs.jsx';
 import Ventilator from '../components/Ventilator.jsx';
 
