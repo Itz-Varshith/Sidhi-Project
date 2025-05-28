@@ -2,7 +2,7 @@ import React from 'react'
 
 const Paramonitor = () => {
   return (
-    <div class="overflow-x-auto max-h-[180px] border border-gray-300 rounded-md p-3 bg-gray-50">
+    <div class="overflow-x-auto max-h-[180px] border border-gray-300 rounded-2xl p-3 bg-gray-50">
             <h3 class="text-gray-700 font-semibold mb-2 border-b border-gray-300 pb-1">Table 1: User Data</h3>
             <table class="min-w-full table-auto border-collapse border border-gray-300 text-sm">
               <thead>
