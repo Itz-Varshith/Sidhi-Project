@@ -9,10 +9,10 @@ const Home = () => {
   //The styling for the layut will be added here.
   //The components will only contain the code for the data of the container.
   return (
-    <div className="bg-500 grow-0 basis-[90%] shadow-lg p-8 overflow-auto">
-      <div className="flex flex-col md:flex-row h-full md:space-x-8 space-y-4 md:space-y-0">
+    <div className="bg-500 grow-0 basis-[90%] shadow-lg p-8 overflow-auto min-h-fit">
+      <div className="flex flex-col md:flex-row h-full md:space-x-8 space-y-4 md:space-y-0 py-0.5">
         <Camera />
-        <div className="md:w-[45%] w-full bg-white rounded-2xl shadow-lg p-4 flex flex-col space-y-4">
+        <div className="md:w-[45%] min-h-[500px] w-full bg-white rounded-2xl shadow-lg p-4 flex flex-col space-y-4">
             <RecentLogs />
             <Ventilator />
             <Paramonitor />
