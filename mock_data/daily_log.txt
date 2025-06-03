@@ -1,0 +1,4 @@
+[INFO] System initialized.
+[INFO] Patient connected.
+[WARNING] High heart rate.
+[INFO] Data saved.
