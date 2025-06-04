@@ -1,0 +1,203 @@
+[
+    {
+      "Date": "2025-06-04",
+      "Start_time": "08:00",
+      "Last_capture": "18:00",
+      "Device_usage_count": 5,
+      "Data_capture_count": 120,
+      "Total_duration": "10h",
+      "Longest_duration": "3h",
+      "No_of_person": 15
+    },
+    {
+      "Date": "2025-06-03",
+      "Start_time": "07:30",
+      "Last_capture": "17:45",
+      "Device_usage_count": 6,
+      "Data_capture_count": 130,
+      "Total_duration": "10h 15m",
+      "Longest_duration": "2h 45m",
+      "No_of_person": 12
+    },
+    {
+      "Date": "2025-06-02",
+      "Start_time": "08:10",
+      "Last_capture": "18:10",
+      "Device_usage_count": 4,
+      "Data_capture_count": 110,
+      "Total_duration": "10h",
+      "Longest_duration": "3h 15m",
+      "No_of_person": 10
+    },
+    {
+      "Date": "2025-06-01",
+      "Start_time": "08:00",
+      "Last_capture": "18:00",
+      "Device_usage_count": 5,
+      "Data_capture_count": 125,
+      "Total_duration": "10h",
+      "Longest_duration": "3h",
+      "No_of_person": 14
+    },
+    {
+      "Date": "2025-05-31",
+      "Start_time": "07:50",
+      "Last_capture": "17:50",
+      "Device_usage_count": 7,
+      "Data_capture_count": 140,
+      "Total_duration": "10h",
+      "Longest_duration": "3h 30m",
+      "No_of_person": 16
+    },
+    {
+      "Date": "2025-05-30",
+      "Start_time": "08:05",
+      "Last_capture": "18:05",
+      "Device_usage_count": 6,
+      "Data_capture_count": 135,
+      "Total_duration": "10h",
+      "Longest_duration": "3h 15m",
+      "No_of_person": 13
+    },
+    {
+      "Date": "2025-05-29",
+      "Start_time": "08:00",
+      "Last_capture": "18:00",
+      "Device_usage_count": 5,
+      "Data_capture_count": 125,
+      "Total_duration": "10h",
+      "Longest_duration": "3h",
+      "No_of_person": 15
+    },
+    {
+      "Date": "2025-05-28",
+      "Start_time": "07:55",
+      "Last_capture": "17:55",
+      "Device_usage_count": 6,
+      "Data_capture_count": 130,
+      "Total_duration": "10h",
+      "Longest_duration": "3h 20m",
+      "No_of_person": 14
+    },
+    {
+      "Date": "2025-05-27",
+      "Start_time": "08:10",
+      "Last_capture": "18:10",
+      "Device_usage_count": 5,
+      "Data_capture_count": 120,
+      "Total_duration": "10h",
+      "Longest_duration": "3h 10m",
+      "No_of_person": 11
+    },
+    {
+      "Date": "2025-05-26",
+      "Start_time": "08:00",
+      "Last_capture": "18:00",
+      "Device_usage_count": 4,
+      "Data_capture_count": 115,
+      "Total_duration": "10h",
+      "Longest_duration": "3h",
+      "No_of_person": 10
+    },
+    {
+      "Date": "2025-05-25",
+      "Start_time": "07:45",
+      "Last_capture": "17:45",
+      "Device_usage_count": 7,
+      "Data_capture_count": 140,
+      "Total_duration": "10h",
+      "Longest_duration": "3h 25m",
+      "No_of_person": 17
+    },
+    {
+      "Date": "2025-05-24",
+      "Start_time": "08:00",
+      "Last_capture": "18:00",
+      "Device_usage_count": 5,
+      "Data_capture_count": 125,
+      "Total_duration": "10h",
+      "Longest_duration": "3h",
+      "No_of_person": 13
+    },
+    {
+      "Date": "2025-05-23",
+      "Start_time": "07:50",
+      "Last_capture": "17:50",
+      "Device_usage_count": 6,
+      "Data_capture_count": 130,
+      "Total_duration": "10h",
+      "Longest_duration": "3h 15m",
+      "No_of_person": 12
+    },
+    {
+      "Date": "2025-05-22",
+      "Start_time": "08:10",
+      "Last_capture": "18:10",
+      "Device_usage_count": 4,
+      "Data_capture_count": 110,
+      "Total_duration": "10h",
+      "Longest_duration": "3h 10m",
+      "No_of_person": 11
+    },
+    {
+      "Date": "2025-05-21",
+      "Start_time": "08:00",
+      "Last_capture": "18:00",
+      "Device_usage_count": 5,
+      "Data_capture_count": 125,
+      "Total_duration": "10h",
+      "Longest_duration": "3h",
+      "No_of_person": 14
+    },
+    {
+      "Date": "2025-05-20",
+      "Start_time": "07:45",
+      "Last_capture": "17:45",
+      "Device_usage_count": 7,
+      "Data_capture_count": 140,
+      "Total_duration": "10h",
+      "Longest_duration": "3h 30m",
+      "No_of_person": 16
+    },
+    {
+      "Date": "2025-05-19",
+      "Start_time": "08:00",
+      "Last_capture": "18:00",
+      "Device_usage_count": 6,
+      "Data_capture_count": 130,
+      "Total_duration": "10h",
+      "Longest_duration": "3h 20m",
+      "No_of_person": 13
+    },
+    {
+      "Date": "2025-05-18",
+      "Start_time": "07:50",
+      "Last_capture": "17:50",
+      "Device_usage_count": 5,
+      "Data_capture_count": 120,
+      "Total_duration": "10h",
+      "Longest_duration": "3h",
+      "No_of_person": 14
+    },
+    {
+      "Date": "2025-05-17",
+      "Start_time": "08:00",
+      "Last_capture": "18:00",
+      "Device_usage_count": 4,
+      "Data_capture_count": 115,
+      "Total_duration": "10h",
+      "Longest_duration": "3h",
+      "No_of_person": 10
+    },
+    {
+      "Date": "2025-05-16",
+      "Start_time": "08:05",
+      "Last_capture": "18:05",
+      "Device_usage_count": 6,
+      "Data_capture_count": 130,
+      "Total_duration": "10h",
+      "Longest_duration": "3h 10m",
+      "No_of_person": 12
+    }
+  ]
+  

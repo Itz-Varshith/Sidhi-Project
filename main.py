@@ -4,8 +4,10 @@ import cv2
 import os
 import json
 import atexit
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 data_dir = "mock_data"  # directory for mock files
@@ -42,11 +44,13 @@ def toggle_patient_privacy(data):
 
 @app.route('/get_log_data')
 def get_log_data():
-    file_path = os.path.join(data_dir, 'daily_log.txt')
+    file_path = os.path.join(data_dir, 'daily_logs.json')
     if os.path.exists(file_path):
-        lines = tail(file_path)
-        return jsonify({"logs": [line.strip() for line in lines]})
-    return jsonify({"logs": []})
+        with open(file_path, 'r') as f:
+            logs = json.load(f)
+        return jsonify(logs)
+    return jsonify([])
+
 
 @app.route('/video')
 def video():
@@ -57,8 +61,9 @@ def get_daily_logs():
     file_path = os.path.join(data_dir, 'logs.json')
     if os.path.exists(file_path):
         with open(file_path, 'r') as f:
-            return jsonify(json.load(f)[-5:])
+            return jsonify(json.load(f))
     return jsonify([])
+
 
 @app.route('/get_ventilator_data')
 def get_ventilator_data():

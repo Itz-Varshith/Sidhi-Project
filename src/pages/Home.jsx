@@ -3,6 +3,7 @@ import Camera from "../components/Camera.jsx";
 import Paramonitor from "../components/Paramonitor.jsx";
 import RecentLogs from "../components/RecentLogs.jsx";
 import Ventilator from "../components/Ventilator.jsx";
+import DailyInteractionReport from '../components/DailyInteractionReport.jsx';
 
 const Home = () => {
   //We will use a component based system so that we can easily manage the data fetching part of the system.
@@ -14,6 +15,7 @@ const Home = () => {
         <Camera />
         <div className="md:w-[45%] min-h-[500px] w-full bg-white rounded-2xl shadow-lg p-4 flex flex-col space-y-4">
             <RecentLogs />
+            <DailyInteractionReport/>
             <Ventilator />
             <Paramonitor />
         </div>
