@@ -1,49 +1,62 @@
 [
-  {"timestamp": "2025-06-01T08:00:00", "pressure": 12.5, "volume": 500, "rate": 15},
-  {"timestamp": "2025-06-01T08:01:00", "pressure": 12.7, "volume": 510, "rate": 15},
-  {"timestamp": "2025-06-01T08:02:00", "pressure": 12.4, "volume": 495, "rate": 14},
-  {"timestamp": "2025-06-01T08:03:00", "pressure": 12.6, "volume": 505, "rate": 15},
-  {"timestamp": "2025-06-01T08:04:00", "pressure": 12.8, "volume": 515, "rate": 15},
-  {"timestamp": "2025-06-01T08:05:00", "pressure": 12.3, "volume": 490, "rate": 14},
-  {"timestamp": "2025-06-01T08:06:00", "pressure": 12.5, "volume": 500, "rate": 15},
-  {"timestamp": "2025-06-01T08:07:00", "pressure": 12.7, "volume": 510, "rate": 15},
-  {"timestamp": "2025-06-01T08:08:00", "pressure": 12.6, "volume": 505, "rate": 15},
-  {"timestamp": "2025-06-01T08:09:00", "pressure": 12.4, "volume": 495, "rate": 14},
-  {"timestamp": "2025-06-01T08:10:00", "pressure": 12.5, "volume": 500, "rate": 15},
-  {"timestamp": "2025-06-01T08:11:00", "pressure": 12.7, "volume": 510, "rate": 15},
-  {"timestamp": "2025-06-01T08:12:00", "pressure": 12.8, "volume": 515, "rate": 15},
-  {"timestamp": "2025-06-01T08:13:00", "pressure": 12.3, "volume": 490, "rate": 14},
-  {"timestamp": "2025-06-01T08:14:00", "pressure": 12.5, "volume": 500, "rate": 15},
-  {"timestamp": "2025-06-01T08:15:00", "pressure": 12.6, "volume": 505, "rate": 15},
-  {"timestamp": "2025-06-01T08:16:00", "pressure": 12.7, "volume": 510, "rate": 15},
-  {"timestamp": "2025-06-01T08:17:00", "pressure": 12.4, "volume": 495, "rate": 14},
-  {"timestamp": "2025-06-01T08:18:00", "pressure": 12.5, "volume": 500, "rate": 15},
-  {"timestamp": "2025-06-01T08:19:00", "pressure": 12.6, "volume": 505, "rate": 15},
-  {"timestamp": "2025-06-01T08:20:00", "pressure": 12.7, "volume": 510, "rate": 15},
-  {"timestamp": "2025-06-01T08:21:00", "pressure": 12.5, "volume": 500, "rate": 15},
-  {"timestamp": "2025-06-01T08:22:00", "pressure": 12.4, "volume": 495, "rate": 14},
-  {"timestamp": "2025-06-01T08:23:00", "pressure": 12.6, "volume": 505, "rate": 15},
-  {"timestamp": "2025-06-01T08:24:00", "pressure": 12.7, "volume": 510, "rate": 15},
-  {"timestamp": "2025-06-01T08:25:00", "pressure": 12.8, "volume": 515, "rate": 15},
-  {"timestamp": "2025-06-01T08:26:00", "pressure": 12.5, "volume": 500, "rate": 15},
-  {"timestamp": "2025-06-01T08:27:00", "pressure": 12.4, "volume": 495, "rate": 14},
-  {"timestamp": "2025-06-01T08:28:00", "pressure": 12.6, "volume": 505, "rate": 15},
-  {"timestamp": "2025-06-01T08:29:00", "pressure": 12.7, "volume": 510, "rate": 15},
-  {"timestamp": "2025-06-01T08:30:00", "pressure": 12.5, "volume": 500, "rate": 15},
-  {"timestamp": "2025-06-01T08:31:00", "pressure": 12.3, "volume": 490, "rate": 14},
-  {"timestamp": "2025-06-01T08:32:00", "pressure": 12.5, "volume": 500, "rate": 15},
-  {"timestamp": "2025-06-01T08:33:00", "pressure": 12.6, "volume": 505, "rate": 15},
-  {"timestamp": "2025-06-01T08:34:00", "pressure": 12.7, "volume": 510, "rate": 15},
-  {"timestamp": "2025-06-01T08:35:00", "pressure": 12.8, "volume": 515, "rate": 15},
-  {"timestamp": "2025-06-01T08:36:00", "pressure": 12.4, "volume": 495, "rate": 14},
-  {"timestamp": "2025-06-01T08:37:00", "pressure": 12.5, "volume": 500, "rate": 15},
-  {"timestamp": "2025-06-01T08:38:00", "pressure": 12.6, "volume": 505, "rate": 15},
-  {"timestamp": "2025-06-01T08:39:00", "pressure": 12.7, "volume": 510, "rate": 15},
-  {"timestamp": "2025-06-01T08:40:00", "pressure": 12.8, "volume": 515, "rate": 15},
-  {"timestamp": "2025-06-01T08:41:00", "pressure": 12.5, "volume": 500, "rate": 15},
-  {"timestamp": "2025-06-01T08:42:00", "pressure": 12.4, "volume": 495, "rate": 14},
-  {"timestamp": "2025-06-01T08:43:00", "pressure": 12.6, "volume": 505, "rate": 15},
-  {"timestamp": "2025-06-01T08:44:00", "pressure": 12.7, "volume": 510, "rate": 15},
-  {"timestamp": "2025-06-01T08:45:00", "pressure": 12.8, "volume": 515, "rate": 15},
-  {"timestamp": "2025-06-01T08:46:00", "pressure": 12.5, "volume": 500, "rate": 15}
+  {
+    "date": "2025-06-01", "time": "06:15", "peak": 22, "pmean": 16, "peep1": 6, "ie": "1:2", "ftot": 18, "vte": 450, "vetot": 8100, "peep2": 7, "vt": 500, "o2": 97
+  },
+  {
+    "date": "2025-06-01", "time": "07:00", "peak": 21, "pmean": 15, "peep1": 5, "ie": "1:2", "ftot": 17, "vte": 460, "vetot": 8050, "peep2": 6, "vt": 510, "o2": 96
+  },
+  {
+    "date": "2025-06-01", "time": "07:45", "peak": 23, "pmean": 17, "peep1": 6, "ie": "1:1", "ftot": 19, "vte": 440, "vetot": 7980, "peep2": 7, "vt": 495, "o2": 98
+  },
+  {
+    "date": "2025-06-01", "time": "08:30", "peak": 24, "pmean": 18, "peep1": 6, "ie": "1:2", "ftot": 20, "vte": 470, "vetot": 8200, "peep2": 7, "vt": 515, "o2": 99
+  },
+  {
+    "date": "2025-06-01", "time": "09:15", "peak": 22, "pmean": 16, "peep1": 5, "ie": "1:3", "ftot": 18, "vte": 455, "vetot": 8120, "peep2": 6, "vt": 505, "o2": 97
+  },
+  {
+    "date": "2025-06-01", "time": "10:00", "peak": 21, "pmean": 15, "peep1": 5, "ie": "1:2", "ftot": 17, "vte": 460, "vetot": 8050, "peep2": 6, "vt": 510, "o2": 96
+  },
+  {
+    "date": "2025-06-01", "time": "10:45", "peak": 23, "pmean": 17, "peep1": 6, "ie": "1:1", "ftot": 19, "vte": 440, "vetot": 7980, "peep2": 7, "vt": 495, "o2": 98
+  },
+  {
+    "date": "2025-06-01", "time": "11:30", "peak": 24, "pmean": 18, "peep1": 6, "ie": "1:2", "ftot": 20, "vte": 470, "vetot": 8200, "peep2": 7, "vt": 515, "o2": 99
+  },
+  {
+    "date": "2025-06-01", "time": "12:15", "peak": 22, "pmean": 16, "peep1": 5, "ie": "1:3", "ftot": 18, "vte": 455, "vetot": 8120, "peep2": 6, "vt": 505, "o2": 97
+  },
+  {
+    "date": "2025-06-01", "time": "13:00", "peak": 20, "pmean": 14, "peep1": 4, "ie": "1:2", "ftot": 16, "vte": 430, "vetot": 7900, "peep2": 5, "vt": 480, "o2": 95
+  },
+  {
+    "date": "2025-06-01", "time": "13:45", "peak": 22, "pmean": 15, "peep1": 5, "ie": "1:2", "ftot": 18, "vte": 455, "vetot": 8000, "peep2": 6, "vt": 500, "o2": 96
+  },
+  {
+    "date": "2025-06-01", "time": "14:30", "peak": 23, "pmean": 16, "peep1": 6, "ie": "1:2", "ftot": 19, "vte": 465, "vetot": 8150, "peep2": 7, "vt": 520, "o2": 98
+  },
+  {
+    "date": "2025-06-01", "time": "15:15", "peak": 21, "pmean": 15, "peep1": 5, "ie": "1:3", "ftot": 17, "vte": 445, "vetot": 8050, "peep2": 6, "vt": 490, "o2": 97
+  },
+  {
+    "date": "2025-06-01", "time": "16:00", "peak": 22, "pmean": 16, "peep1": 5, "ie": "1:2", "ftot": 18, "vte": 455, "vetot": 8100, "peep2": 6, "vt": 500, "o2": 97
+  },
+  {
+    "date": "2025-06-01", "time": "16:45", "peak": 23, "pmean": 17, "peep1": 6, "ie": "1:2", "ftot": 19, "vte": 470, "vetot": 8200, "peep2": 7, "vt": 515, "o2": 98
+  },
+  {
+    "date": "2025-06-01", "time": "17:30", "peak": 21, "pmean": 15, "peep1": 5, "ie": "1:3", "ftot": 17, "vte": 450, "vetot": 8000, "peep2": 6, "vt": 495, "o2": 96
+  },
+  {
+    "date": "2025-06-01", "time": "18:15", "peak": 24, "pmean": 18, "peep1": 6, "ie": "1:2", "ftot": 20, "vte": 475, "vetot": 8250, "peep2": 7, "vt": 520, "o2": 99
+  },
+  {
+    "date": "2025-06-01", "time": "19:00", "peak": 22, "pmean": 16, "peep1": 5, "ie": "1:2", "ftot": 18, "vte": 455, "vetot": 8100, "peep2": 6, "vt": 505, "o2": 97
+  },
+  {
+    "date": "2025-06-01", "time": "19:45", "peak": 23, "pmean": 17, "peep1": 6, "ie": "1:1", "ftot": 19, "vte": 460, "vetot": 8200, "peep2": 7, "vt": 510, "o2": 98
+  },
+  {
+    "date": "2025-06-01", "time": "20:30", "peak": 21, "pmean": 15, "peep1": 5, "ie": "1:3", "ftot": 17, "vte": 445, "vetot": 8050, "peep2": 6, "vt": 490, "o2": 96
+  }
 ]
