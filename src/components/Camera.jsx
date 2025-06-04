@@ -1,10 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import {io} from 'socket.io-client';
+
+const SOCKET_URL = 'https://localhost:5000';
+
+
+const socket = io(SOCKET_URL);
 
 const Camera = () => {
+
+  const [enabledPatientPrivacy,setEnabledPatientPrivacy] = useState(false);
+  const [enabledPrivacy,setEnabledPrivacy] = useState(false);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     alert('Form submitted!');
   };
+  
+  const handlePatientPrivacy = () => 
+  {
+    setEnabledPatientPrivacy( (prev) => !prev);
+    socket.emit("toggle_patient_privacy", {enabledPatientPrivacy});
+  }
+  const handlePrivacy = () =>{
+
+    setEnabledPrivacy( (prev) => !prev);
+    socket.emit("toggle_privacy",{enabledPrivacy});
+  }
+
+  useEffect( ()=>{
+
+   socket.on("connect", ()=> console.log('Connected to the socket server')); 
+  });
+
+  
 
   return (
     <div className="md:w-[55%] min-h-[500px] w-full bg-white rounded-2xl shadow-lg p-4 flex flex-col space-y-4 overflow-auto">
@@ -64,8 +92,8 @@ const Camera = () => {
       </div>
 
       <div className="m-4 flex flex-wrap justify-center space-x-4 px-5 gap-4">
-        <button>Enable Privacy Mode</button>
-        <button>Enable Patient Privacy</button>
+        <button onClick={handlePrivacy}>Enable Privacy Mode</button>
+        <button onClick={handlePatientPrivacy}>Enable Patient Privacy</button>
       </div>
     </div>
   );
