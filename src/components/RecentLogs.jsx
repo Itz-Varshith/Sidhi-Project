@@ -4,10 +4,16 @@ import axios from 'axios';
 const RecentLogs = () => {
   const [logs, setLogs] = useState([]);
 
-  useEffect(() => {
+  const fetchRecentLogs=()=>{
     axios.get('http://localhost:5000/get_daily_logs')
       .then(response => setLogs(response.data))
       .catch(error => console.error('Error fetching logs:', error));
+  }
+
+  useEffect(() => {
+    fetchRecentLogs();
+    const interval=setInterval(fetchRecentLogs,5000);
+    return ()=> clearInterval(interval);
   }, []);
 
   const formatTimestamp = (timestamp) => {
