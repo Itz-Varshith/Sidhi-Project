@@ -7,16 +7,16 @@ const Paramonitor = () => {
 
   const fetchParamonitorData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/get_paramonitor_data');
+      const response = await axios.get('http://10.2.35.160:5000/get_paramonitor_data');
       const formatted = response.data.map(entry => {
-        const dateObj = new Date(entry.timestamp);
+        const dateObj = new Date(`${entry.Date}T${entry.Time}`);
         return {
-          date: dateObj.toISOString().split('T')[0],
-          time: dateObj.toTimeString().split(' ')[0],
-          spo2: entry.spo2,
-          pr: entry.hr,
-          temp: (36 + Math.random()).toFixed(1), // mock temp
-          bp: `${entry.bp_systolic}/${entry.bp_diastolic}`
+          date: dateObj.toLocaleDateString('en-IN'), // or entry.Date
+          time: dateObj.toLocaleTimeString('en-IN'), // or entry.Time
+          spo2: entry.SpO2 ?? 'N/A',
+          pr: entry.PR ?? 'N/A',
+          temp: entry.TEMP ?? 'N/A',
+          bp: entry.BP ?? 'N/A'
         };
       });
       setData(formatted.reverse()); // show latest first

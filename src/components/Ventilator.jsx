@@ -7,13 +7,13 @@ const Ventilator = () => {
 
   const fetchVentilatorData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/get_ventilator_data');
+      const response = await axios.get('http://10.2.35.160:5000/get_ventilator_data');
       // Assuming each entry has a timestamp and ventilator params like peak, pmean, peep1, ie, etc.
       const formatted = response.data.map(entry => {
-        const dateObj = new Date(entry.timestamp);
+        const dateObj = new Date(`${entry.Date}T${entry.Time}`);
         return {
-          date: entry.date,
-          time: entry.time,
+          date: dateObj.toLocaleDateString('en-IN'), // or entry.Date
+          time: dateObj.toLocaleTimeString('en-IN'), // or entry.Time
           peak: entry.peak,
           pmean: entry.pmean,
           peep1: entry.peep1,
