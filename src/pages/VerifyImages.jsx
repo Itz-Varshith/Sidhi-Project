@@ -4,23 +4,12 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 
 function VerifyImages() {
-  const [data, setData] = useState([
-    {
-      imagePath: "/unverified/0001.jpeg",
-      prompt: "Sanitizing hands before patient contact",
-      boundingBox: { x: 0.2, y: 0.25, width: 0.3, height: 0.3 }
-    },
-    {
-      imagePath: "/unverified/0002.jpeg",
-      prompt: "Nurse wearing gloves while dressing wound",
-      boundingBox: { x: 0.1, y: 0.15, width: 0.25, height: 0.35 }
-    }
-  ]);
+  const [data, setData] = useState([]);
 
   const [verifiedImages, setVerifiedImages] = useState([]);
   const [deletedImages, setdeletedImages] = useState([]);
   const [currentIdx, setCurrentIdx] = useState(0);
-  const [box, setBox] = useState({ ...data[0].boundingBox });
+  const [box, setBox] = useState({});
   const imageRef = useRef(null);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
 
@@ -127,8 +116,9 @@ function VerifyImages() {
   if (data.length === 0 || !box) return <div>Loading...</div>;
 
   const current = data[currentIdx];
-  const imageUrl = `${current.imagePath}`;
+  const imageUrl = `http://localhost:3001/static/${current.imagePath}`;
 
+  console.log(imageUrl);
   const absoluteBox = {
     x: box.x * imageSize.width,
     y: box.y * imageSize.height,

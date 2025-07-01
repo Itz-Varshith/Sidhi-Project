@@ -107,7 +107,7 @@ mainRouter.get('/capture_frames', async (req, res) => {
 
 //Route to get the unverified images
 mainRouter.get('/unverified_images', async (req, res) => {
-    const UNVERIFIED_DIR = path.join(__dirname, 'unverified');
+    const UNVERIFIED_DIR = path.join(__dirname, '..', 'public', 'unverified');
 
     if (!fs.existsSync(UNVERIFIED_DIR)) {
         return res.status(404).json({
