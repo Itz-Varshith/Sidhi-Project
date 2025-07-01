@@ -34,7 +34,7 @@ export default function PromptBox() {
     alert('Prompt submitted successfully.');
 
     try {
-      const url = `http://10.2.35.160:5000/capture_frames?prompt=${encodeURIComponent(prompt)}&count=${count}`;
+      const url = `http://localhost:3001/capture_frames?prompt=${encodeURIComponent(prompt)}&count=${count}`;
       const response = await fetch(url, { method: 'GET' });
 
       if (!response.ok) {

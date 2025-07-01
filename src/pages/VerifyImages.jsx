@@ -29,6 +29,7 @@ function VerifyImages() {
       try {
         const res = await axios.get("http://localhost:3001/unverified_images");
         setData(res.data);
+        console.log(res.data);
         if (res.data.length > 0) setBox({ ...res.data[0].boundingBox });
       } catch (err) {
         console.error("Error fetching image data:", err);
@@ -74,7 +75,7 @@ function VerifyImages() {
       }
       // deleting the image logic may be changed as per the backend requirements 
       if (deletedImages.length) {
-        await axios.post("http://localhost:3001/deleteImage", deletedImages);
+        await axios.post("http://localhost:3001/deleteImage", imagePath);
         console.log("Deleted images uploaded.");
         setdeletedImages([]);
       }
