@@ -1,8 +1,8 @@
-import React from "react";
 
-const Navbar = () => {
+
+const Navbar = ({heading}) => {
   return (
-    // <div className="bg-amber-500 grow-0 basis-[10%] rounded-lg shadow-lg p-4">
+    
     <nav className="navbar flex justify-between flex-col sm:flex-row items-center top-0 left-0 px-3 py-3 m-0 w-full bg-[#E5ECE9]">
       <div className="">
         <div className=" flex justify-between ">
@@ -31,10 +31,10 @@ const Navbar = () => {
         <h1 className="text-center"> CHARAK DIGITAL TWIN PLATFORM</h1>
       </div>
       <div className="w-[80%] p-3 text-center text-3xl font-extrabold">
-        <h1 >Data Collection Interface</h1>
+        <h1 >{heading}</h1>
       </div>
     </nav>
-    // </div>
+   
 
   );
 };

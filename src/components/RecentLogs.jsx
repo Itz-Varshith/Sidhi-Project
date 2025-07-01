@@ -4,11 +4,11 @@ import axios from 'axios';
 const RecentLogs = () => {
   const [logs, setLogs] = useState([]);
 
-  useEffect(() => {
+  const fetchRecentLogs = async () => {
     axios.get('http://10.2.35.160:5000/get_log_data')
       .then(response => setLogs(response.data.logs))
       .catch(error => console.error('Error fetching logs:', error));
-  })
+  }
 
   useEffect(() => {
     fetchRecentLogs();

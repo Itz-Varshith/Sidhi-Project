@@ -35,3 +35,47 @@ button{
 button:hover{
     background-color: oklch(0.6 0.12 180.43);
 }
+
+.outer-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.verifier-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space;
+  gap: 20px;
+}
+
+.header-panel {
+  text-align: center;
+  display: inline;
+}
+
+.counter {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #555;
+  margin-top: 5px;
+  display: inline;
+}
+
+.image-wrapper {
+  position: relative;
+  display: inline-block;
+  max-width: 90%;
+}
+
+.background-image {
+  width: 100%;
+  height: auto;
+}
+
+.button-bar {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+}

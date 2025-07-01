@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Annotate from "./pages/Annotate.jsx";
 import Navbar from "./components/Navbar.jsx";
+import VerifyImages from "./pages/VerifyImages.jsx";
 
 const App = () => {
   useEffect(() => {
@@ -39,10 +40,11 @@ const App = () => {
 
   return (
     <div className="flex flex-col h-screen space-y-4">
-      <Navbar />
+      
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/annotate" element={<Annotate />} />
+        <Route path="/verify-images" element={<VerifyImages/>}></Route>
       </Routes>
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {io} from 'socket.io-client';
+import PromptBox from './PromptBox';
 
 const SOCKET_URL = 'http://10.2.35.160:5000';
 
@@ -10,7 +11,12 @@ const Camera = () => {
 
   const [privacyEnabled, setPrivacyEnabled] = useState(false);
   const [patientPrivacyEnabled, setPatientPrivacyEnabled] = useState(false);
+  
 
+  const handleVerifyImages = async () => {
+      console.log('Redirecting to verification');
+      const newTab = window.open('/verify-images', '_blank');
+  }
 
   const handlePatientPrivacy = () => {
     const newState = !patientPrivacyEnabled;
@@ -23,6 +29,8 @@ const Camera = () => {
     setPrivacyEnabled(newState);
     socket.emit('toggle_privacy', { enabled: newState });
   };
+
+  
   const [bed, setBed] = useState('');
   const [time, setTime] = useState('');
   const [isMonitoring, setIsMonitoring] = useState(false);
@@ -195,6 +203,13 @@ const Camera = () => {
 
       <div className="m-4 flex flex-wrap justify-center space-x-4 px-5 gap-4">
         <button
+          onClick={handleVerifyImages}
+          className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
+          aria-label="Verify Images"
+        >
+          Verify Images
+        </button>
+        <button
           onClick={handlePrivacy}
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
@@ -208,6 +223,7 @@ const Camera = () => {
         >
           {patientPrivacyEnabled ? 'Disable Patient Privacy' : 'Enable Patient Privacy'}
         </button>
+        <PromptBox/>
       </div>
       <div
           style={{
