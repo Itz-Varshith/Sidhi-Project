@@ -7,7 +7,7 @@ const DailyData = () => {
 
   const fetchDailyData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/get_log_data');
+      const response = await axios.get('http://10.2.35.160:5000/get_daily_logs');
       // Assuming each entry has all keys as strings or numbers
       // You can parse or format dates if needed here
       setData(response.data.reverse()); // latest first
