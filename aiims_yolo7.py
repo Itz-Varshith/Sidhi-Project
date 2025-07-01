@@ -29,14 +29,14 @@ from multiprocessing import Process
 excel_output_dir = "excel_output"
 
 os.makedirs(excel_output_dir, exist_ok=True)
-# image_output_dir = 'captured_images'
-# if not os.path.exists(image_output_dir):
-#     os.makedirs(image_output_dir)
-# else:
-#     for file in os.listdir(image_output_dir):
-#         if file:
-#             path = os.path.join(image_output_dir, file)
-#             os.remove(path)
+image_output_dir = 'captured_images'
+if not os.path.exists(image_output_dir):
+    os.makedirs(image_output_dir)
+else:
+    for file in os.listdir(image_output_dir):
+        if file:
+            path = os.path.join(image_output_dir, file)
+            os.remove(path)
 
 
 app = Flask(__name__)
