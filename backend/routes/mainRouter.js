@@ -105,10 +105,10 @@ mainRouter.get('/capture_frames', async (req, res) => {
     }
 });
 
-//Route to get the unverified images
+// //Route to get the unverified images
+
 mainRouter.get('/unverified_images', async (req, res) => {
     const UNVERIFIED_DIR = path.join(__dirname, '..', 'public', 'unverified');
-
     if (!fs.existsSync(UNVERIFIED_DIR)) {
         return res.status(404).json({
             status: 'error',
@@ -118,44 +118,48 @@ mainRouter.get('/unverified_images', async (req, res) => {
 
     try {
         const files = fs.readdirSync(UNVERIFIED_DIR);
-        const images = files.filter(f => f.endsWith('.jpg'));
+        const imageFiles = files.filter(f => f.endsWith('.jpg'));
 
         const results = [];
 
-        for (const imageFile of images) {
+        for (const imageFile of imageFiles) {
             const baseName = path.parse(imageFile).name;
-
+            const imgPath = path.join(UNVERIFIED_DIR, imageFile);
             const promptPath = path.join(UNVERIFIED_DIR, `${baseName}_prompt.txt`);
             const bboxPath = path.join(UNVERIFIED_DIR, `${baseName}_bbox.txt`);
 
-            // Check if both .txt files exist
-            if (!fs.existsSync(promptPath) || !fs.existsSync(bboxPath)) {
-                console.warn(`Missing prompt or bbox for ${imageFile}`);
-                continue;
+            // ✅ Check: only proceed if all three files exist
+            if (
+                fs.existsSync(imgPath) &&
+                fs.existsSync(promptPath) &&
+                fs.existsSync(bboxPath)
+            ) {
+                const prompt = fs.readFileSync(promptPath, 'utf-8').trim();
+                const bboxText = fs.readFileSync(bboxPath, 'utf-8').trim();
+                const [x, y, width, height] = bboxText.split(/[\s,]+/).map(Number); // robust splitter
+
+                results.push({
+                    imagePath: `unverified/${imageFile}`,
+                    boundingBox: { x, y, width, height },
+                    prompt
+                });
+            } else {
+                console.warn(`Skipping ${imageFile} due to missing prompt/bbox/image.`);
             }
-
-            const prompt = fs.readFileSync(promptPath, 'utf-8').trim();
-            const bboxText = fs.readFileSync(bboxPath, 'utf-8').trim();
-            const [x, y, width, height] = bboxText.split(' ').map(Number);
-
-            results.push({
-                imagePath: `unverified/${imageFile}`,
-                boundingBox: { x, y, width, height },
-                prompt
-            });
         }
 
-        res.json(results);
+        return res.json(results);
 
     } catch (err) {
         console.error('Error reading unverified images:', err);
-        res.status(500).json({
+        return res.status(500).json({
             status: 'error',
             message: 'Failed to load unverified images',
             error: err.toString()
         });
     }
 });
+
 
 //API route to delete images.
 //THis is kinda incomplete.
@@ -230,6 +234,8 @@ if (!fs.existsSync(VERIFIED_DIR)) {
     fs.mkdirSync(VERIFIED_DIR, { recursive: true });
 }
 
+
+// Static file server for viewing frames and prompt files
 // mainRouter.post('/verified', (req, res) => {
 //     const verifiedImages = req.body;
 
@@ -243,19 +249,23 @@ if (!fs.existsSync(VERIFIED_DIR)) {
 //     try {
 //         verifiedImages.forEach(item => {
 //             const { imagePath, boundingBox, prompt } = item;
-
+//             console.log(imagePath,boundingBox,prompt);
 //             if (!imagePath || !boundingBox || !prompt) {
 //                 console.warn("Skipping item due to missing data:", item);
 //                 return;
 //             }
 
-//             const srcPath = path.join(__dirname, imagePath); // e.g. frames/unverified/img.jpg
-//             const imageName = path.basename(srcPath); // e.g. img.jpg
+//             const srcPath = path.join(__dirname, imagePath); // e.g. unverified/image.jpg
+//             const imageName = path.basename(srcPath); // image.jpg
 //             const baseName = path.parse(imageName).name;
 
 //             const destImagePath = path.join(VERIFIED_DIR, imageName);
 //             const destPromptPath = path.join(VERIFIED_DIR, `${baseName}_prompt.txt`);
 //             const destBBoxPath = path.join(VERIFIED_DIR, `${baseName}_bbox.txt`);
+
+//             const unverifiedDir = path.dirname(srcPath);
+//             const originalPromptPath = path.join(unverifiedDir, `${baseName}_prompt.txt`);
+//             const originalBBoxPath = path.join(unverifiedDir, `${baseName}_bbox.txt`);
 
 //             // Move image
 //             if (fs.existsSync(srcPath)) {
@@ -265,19 +275,26 @@ if (!fs.existsSync(VERIFIED_DIR)) {
 //                 return;
 //             }
 
-//             // Write prompt
+//             // Write prompt & bbox in verified dir
 //             fs.writeFileSync(destPromptPath, prompt);
-
-//             // Write bbox
 //             const { x, y, width, height } = boundingBox;
 //             fs.writeFileSync(destBBoxPath, `${x},${y},${width},${height}`);
 
-//             console.log(`Verified image moved and saved: ${imageName}`);
+//             // Delete original prompt & bbox files
+//             if (fs.existsSync(originalPromptPath)) {
+//                 fs.unlinkSync(originalPromptPath);
+//             }
+
+//             if (fs.existsSync(originalBBoxPath)) {
+//                 fs.unlinkSync(originalBBoxPath);
+//             }
+
+//             console.log(`Verified and cleaned: ${imageName}`);
 //         });
 
 //         res.json({
 //             success: true,
-//             message: "Verified images saved successfully."
+//             message: "Verified images saved and unverified files cleaned."
 //         });
 //     } catch (error) {
 //         console.error("Error saving verified data:", error);
@@ -288,10 +305,6 @@ if (!fs.existsSync(VERIFIED_DIR)) {
 //         });
 //     }
 // });
-
-
-
-// Static file server for viewing frames and prompt files
 mainRouter.post('/verified', (req, res) => {
     const verifiedImages = req.body;
 
@@ -305,23 +318,26 @@ mainRouter.post('/verified', (req, res) => {
     try {
         verifiedImages.forEach(item => {
             const { imagePath, boundingBox, prompt } = item;
+            console.log(imagePath, boundingBox, prompt);
 
             if (!imagePath || !boundingBox || !prompt) {
                 console.warn("Skipping item due to missing data:", item);
                 return;
             }
 
-            const srcPath = path.join(__dirname, imagePath); // e.g. unverified/image.jpg
-            const imageName = path.basename(srcPath); // image.jpg
+            // Absolute paths
+            const unverifiedDir = path.join(__dirname, '..', 'public');
+            const srcPath = path.join(unverifiedDir, imagePath); // e.g., /public/unverified/xyz.jpg
+            const imageName = path.basename(srcPath);
             const baseName = path.parse(imageName).name;
 
-            const destImagePath = path.join(VERIFIED_DIR, imageName);
-            const destPromptPath = path.join(VERIFIED_DIR, `${baseName}_prompt.txt`);
-            const destBBoxPath = path.join(VERIFIED_DIR, `${baseName}_bbox.txt`);
+            const verifiedDir = path.join(__dirname, 'verified'); // backend/routes/verified
+            const destImagePath = path.join(verifiedDir, imageName);
+            const destPromptPath = path.join(verifiedDir, `${baseName}_prompt.txt`);
+            const destBBoxPath = path.join(verifiedDir, `${baseName}_bbox.txt`);
 
-            const unverifiedDir = path.dirname(srcPath);
-            const originalPromptPath = path.join(unverifiedDir, `${baseName}_prompt.txt`);
-            const originalBBoxPath = path.join(unverifiedDir, `${baseName}_bbox.txt`);
+            const originalPromptPath = path.join(unverifiedDir, 'unverified', `${baseName}_prompt.txt`);
+            const originalBBoxPath = path.join(unverifiedDir, 'unverified', `${baseName}_bbox.txt`);
 
             // Move image
             if (fs.existsSync(srcPath)) {
@@ -331,19 +347,14 @@ mainRouter.post('/verified', (req, res) => {
                 return;
             }
 
-            // Write prompt & bbox in verified dir
+            // Write prompt and bbox
             fs.writeFileSync(destPromptPath, prompt);
             const { x, y, width, height } = boundingBox;
             fs.writeFileSync(destBBoxPath, `${x},${y},${width},${height}`);
 
-            // Delete original prompt & bbox files
-            if (fs.existsSync(originalPromptPath)) {
-                fs.unlinkSync(originalPromptPath);
-            }
-
-            if (fs.existsSync(originalBBoxPath)) {
-                fs.unlinkSync(originalBBoxPath);
-            }
+            // Delete original .txt files
+            if (fs.existsSync(originalPromptPath)) fs.unlinkSync(originalPromptPath);
+            if (fs.existsSync(originalBBoxPath)) fs.unlinkSync(originalBBoxPath);
 
             console.log(`Verified and cleaned: ${imageName}`);
         });
@@ -352,6 +363,7 @@ mainRouter.post('/verified', (req, res) => {
             success: true,
             message: "Verified images saved and unverified files cleaned."
         });
+
     } catch (error) {
         console.error("Error saving verified data:", error);
         res.status(500).json({

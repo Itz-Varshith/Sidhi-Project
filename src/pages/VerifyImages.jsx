@@ -18,7 +18,6 @@ function VerifyImages() {
       try {
         const res = await axios.get("http://localhost:3001/unverified_images");
         setData(res.data);
-        console.log(res.data);
         if (res.data.length > 0) setBox({ ...res.data[0].boundingBox });
       } catch (err) {
         console.error("Error fetching image data:", err);
