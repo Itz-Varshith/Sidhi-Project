@@ -327,14 +327,20 @@ mainRouter.post('/verified', (req, res) => {
 
             // Absolute paths
             const unverifiedDir = path.join(__dirname, '..', 'public');
-            const srcPath = path.join(unverifiedDir, imagePath); // e.g., /public/unverified/xyz.jpg
+            const srcPath = path.join(unverifiedDir, imagePath);
             const imageName = path.basename(srcPath);
             const baseName = path.parse(imageName).name;
 
-            const verifiedDir = path.join(__dirname, 'verified'); // backend/routes/verified
-            const destImagePath = path.join(verifiedDir, imageName);
-            const destPromptPath = path.join(verifiedDir, `${baseName}_prompt.txt`);
-            const destBBoxPath = path.join(verifiedDir, `${baseName}_bbox.txt`);
+            // New: create prompt-based folder inside verified
+            const promptFolderName = prompt.trim().replace(/[<>:"/\\|?*\x00-\x1F]/g, '_'); // sanitize folder name
+            const promptDir = path.join(__dirname, 'verified', promptFolderName);
+
+            if (!fs.existsSync(promptDir)) {
+                fs.mkdirSync(promptDir, { recursive: true });
+            }
+
+            const destImagePath = path.join(promptDir, imageName);
+            const destBBoxPath = path.join(promptDir, `${baseName}_bbox.txt`);
 
             const originalPromptPath = path.join(unverifiedDir, 'unverified', `${baseName}_prompt.txt`);
             const originalBBoxPath = path.join(unverifiedDir, 'unverified', `${baseName}_bbox.txt`);
@@ -347,8 +353,7 @@ mainRouter.post('/verified', (req, res) => {
                 return;
             }
 
-            // Write prompt and bbox
-            fs.writeFileSync(destPromptPath, prompt);
+            // New: Only save bbox (not prompt) inside the prompt-named folder
             const { x, y, width, height } = boundingBox;
             fs.writeFileSync(destBBoxPath, `${x},${y},${width},${height}`);
 
@@ -356,12 +361,12 @@ mainRouter.post('/verified', (req, res) => {
             if (fs.existsSync(originalPromptPath)) fs.unlinkSync(originalPromptPath);
             if (fs.existsSync(originalBBoxPath)) fs.unlinkSync(originalBBoxPath);
 
-            console.log(`Verified and cleaned: ${imageName}`);
+            console.log(`Verified and organized under: ${promptFolderName}/${imageName}`);
         });
 
         res.json({
             success: true,
-            message: "Verified images saved and unverified files cleaned."
+            message: "Verified images saved in prompt folders and unverified files cleaned."
         });
 
     } catch (error) {
