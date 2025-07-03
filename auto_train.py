@@ -1,77 +1,74 @@
 import os
+import shutil
 import subprocess
 import random
 from pathlib import Path
 from typing import List
+from yolov8combiner import combine_yolo_datasets
+from ultralytics import YOLO
+import torch
 
-# ---- CONFIGURATION ----
-OLD_DATASET = "/content/old_dataset"
-NEW_DATASET = "/content/new_dataset"
-COMBINED_DATASET = "/content/combined_dataset"
-PREV_WEIGHTS = "/content/best.pt"
-IMAGE_EXTENSIONS = [".jpg", ".jpeg"]
-LABEL_EXTENSIONS = [".txt"]
-IMAGE_THRESHOLD = 200
-LABEL_THRESHOLD = 200
-OLD_PERCENTAGE = 0.2
-NEW_PERCENTAGE = 0.8
-EPOCHS = 50
-BATCH_SIZE = 8
-IMGSZ = 640
-RUN_NAME = "auto_incremental_training"
+print(f"GPU available: {torch.cuda.is_available()}")
 
-# ---- UTILITY FUNCTIONS ----
-def count_files(directory: str, extensions: List[str]) -> int:
-    count = 0
-    for root, _, files in os.walk(directory):
-        for file in files:
-            if any(file.lower().endswith(ext) for ext in extensions):
-                count += 1
-    return count
+root="Sidhi-Project\backend\routes\verified"
 
-def combine_datasets_if_needed():
-    # Count new data
-    new_img_count = count_files(NEW_DATASET, IMAGE_EXTENSIONS)
-    new_lbl_count = count_files(NEW_DATASET, LABEL_EXTENSIONS)
-    print(f"New dataset: {new_img_count} images, {new_lbl_count} labels.")
+def ready_for_training(min_images=200):
+    return all(
+        len(os.listdir(os.path.join(root, cls, "images"))) >= min_images
+        for cls in os.listdir(root)
+        if os.path.isdir(os.path.join(root, cls))
+    )
 
-    if new_img_count >= IMAGE_THRESHOLD and new_lbl_count >= LABEL_THRESHOLD:
-        print("Threshold met. Combining datasets...")
+def rotate_dataset_folders(base_path='Sidhi-Project/Datasets'):
+    new_path = os.path.join(base_path, 'New')
+    old_path = os.path.join(base_path, 'Old')
 
-        # Run Combinderwvalid.py as a subprocess
-        cmd = [
-            "python", "Combinderwvalid.py",
-            "--old-dataset", OLD_DATASET,
-            "--new-dataset", NEW_DATASET,
-            "--output", COMBINED_DATASET,
-            "--old-percentage", str(OLD_PERCENTAGE),
-            "--new-percentage", str(NEW_PERCENTAGE)
-        ]
-        print(f"Running: {' '.join(cmd)}")
-        subprocess.run(cmd, check=True)
-        return True
+    # Delete Old folder
+    if os.path.exists(old_path):
+        shutil.rmtree(old_path)
+        print(f"Deleted: {old_path}")
+
+    # Rename New to Old
+    if os.path.exists(new_path):
+        os.rename(new_path, old_path)
+        print(f"Renamed: {new_path} → {old_path}")
     else:
-        print(f"Not enough new data to proceed. Need >= {IMAGE_THRESHOLD} images and >= {LABEL_THRESHOLD} labels.")
-        return False
+        print(f"Warning: New folder doesn't exist at {new_path}")
 
-def launch_yolo_training():
-    data_yaml = os.path.join(COMBINED_DATASET, "data.yaml")
-    cmd = [
-        "yolo", "detect", "train",
-        f"data={data_yaml}",
-        f"model={PREV_WEIGHTS}",
-        f"epochs={EPOCHS}",
-        f"imgsz={IMGSZ}",
-        f"batch={BATCH_SIZE}",
-        f"name={RUN_NAME}"
-    ]
-    print(f"Launching YOLOv8 training: {' '.join(cmd)}")
-    subprocess.run(cmd, check=True)
+    # Create fresh New folder
+    os.makedirs(new_path)
+    print(f"Created empty: {new_path}")
 
-# ---- MAIN SCRIPT ----
-def main():
-    if combine_datasets_if_needed():
-        launch_yolo_training()
+if ready_for_training():
+    success = combine_yolo_datasets(
+        existing_dataset_path="Sidhi-Project\Datasets\Old",
+        new_classes_folder=root,
+        output_path="Sidhi-Project\Datasets\New",
+        existing_percentage=0.2,  # Use 20% of existing dataset
+        split_ratios={'train': 0.7, 'val': 0.2, 'test': 0.1},  # split ratios
+        random_seed=123
+    )
+    if success:
+        for item in os.listdir(root):
+            item_path = os.path.join(root, item)
+            if os.path.isdir(item_path):
+                shutil.rmtree(item_path)
+            else:
+                os.remove(item_path)
+    model = YOLO('Sidhi-Project\backend\weights\incrementalv8.pt')
+    
+    results = model.train(
+        data='/content/combinedfixed/data.yaml',
+        epochs=50,
+        imgsz=640,
+        batch=16,
+        device=0,
+        freeze=10,        # freeze backbone
+        lr0=0.001         # slow learning rate
+    )
+    print(results)
+    rotate_dataset_folders()
 
-if __name__ == "__main__":
-    main()
+
+
+

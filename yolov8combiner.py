@@ -3,8 +3,7 @@ import shutil
 import yaml
 import random
 from pathlib import Path
-from typing import Dict, List, Tuple, Set
-import argparse
+from typing import Dict, List, Tuple, Set, Optional
 
 
 class YOLOv8ClassFolderCombiner:
@@ -397,78 +396,81 @@ class YOLOv8ClassFolderCombiner:
             print(f"Error creating YAML file: {e}")
 
 
-def main():
-    parser = argparse.ArgumentParser(
-        description='Combine existing YOLOv8 dataset with new class folders',
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-  python combine_class_folders.py --existing-dataset ./existing_dataset --new-classes ./new_classes --output ./combined_dataset
-  python combine_class_folders.py --existing-dataset ./old --new-classes ./classes --output ./combined --existing-percentage 0.3
-
-New classes folder structure should be:
-  new_classes/
-  ├── class1/
-  │   ├── images/
-  │   └── labels/
-  ├── class2/
-  │   ├── images/
-  │   └── labels/
-  └── ...
-        """
-    )
+def combine_yolo_datasets(
+    existing_dataset_path: str,
+    new_classes_folder: str,
+    output_path: str,
+    existing_percentage: float = 0.2,
+    split_ratios: Optional[Dict[str, float]] = None,
+    random_seed: int = 42
+) -> bool:
+    """
+    Combine existing YOLOv8 dataset with new class folders.
     
-    parser.add_argument('--existing-dataset', required=True, 
-                       help='Path to existing YOLOv8 dataset directory')
-    parser.add_argument('--new-classes', required=True, 
-                       help='Path to new classes folder')
-    parser.add_argument('--output', required=True, 
-                       help='Output path for combined dataset')
-    parser.add_argument('--existing-percentage', type=float, default=0.2, 
-                       help='Percentage of existing dataset to include (default: 0.2)')
-    parser.add_argument('--train-ratio', type=float, default=0.8,
-                       help='Ratio of new data for training (default: 0.8)')
-    parser.add_argument('--val-ratio', type=float, default=0.15,
-                       help='Ratio of new data for validation (default: 0.15)')
-    parser.add_argument('--test-ratio', type=float, default=0.05,
-                       help='Ratio of new data for testing (default: 0.05)')
-    parser.add_argument('--seed', type=int, default=42, 
-                       help='Random seed for reproducible sampling (default: 42)')
+    Args:
+        existing_dataset_path (str): Path to existing YOLOv8 dataset directory
+        new_classes_folder (str): Path to new classes folder
+        output_path (str): Output path for combined dataset
+        existing_percentage (float): Percentage of existing dataset to include (0.0-1.0)
+        split_ratios (dict): Ratios for train/val/test splits (e.g., {'train': 0.8, 'val': 0.15, 'test': 0.05})
+        random_seed (int): Random seed for reproducible sampling
     
-    args = parser.parse_args()
+    Returns:
+        bool: True if successful, False otherwise
     
-    # Validate percentages
-    if not (0 <= args.existing_percentage <= 1):
-        raise ValueError("existing-percentage must be between 0 and 1")
+    Example:
+        >>> from yolo_dataset_combiner import combine_yolo_datasets
+        >>> 
+        >>> success = combine_yolo_datasets(
+        ...     existing_dataset_path="./existing_dataset",
+        ...     new_classes_folder="./new_classes",
+        ...     output_path="./combined_dataset",
+        ...     existing_percentage=0.3,
+        ...     split_ratios={'train': 0.8, 'val': 0.15, 'test': 0.05},
+        ...     random_seed=42
+        ... )
+        >>> 
+        >>> if success:
+        ...     print("Dataset combination successful!")
+        ... else:
+        ...     print("Dataset combination failed!")
     
-    split_ratios = {
-        'train': args.train_ratio,
-        'val': args.val_ratio,
-        'test': args.test_ratio
-    }
+    New classes folder structure should be:
+        new_classes/
+        ├── class1/
+        │   ├── images/
+        │   └── labels/
+        ├── class2/
+        │   ├── images/
+        │   └── labels/
+        └── ...
+    """
+    # Validate inputs
+    if not (0 <= existing_percentage <= 1):
+        print("Error: existing_percentage must be between 0 and 1")
+        return False
+    
+    if split_ratios is None:
+        split_ratios = {'train': 0.8, 'val': 0.15, 'test': 0.05}
     
     # Normalize ratios
     total_ratio = sum(split_ratios.values())
     if total_ratio <= 0:
-        raise ValueError("Sum of split ratios must be greater than 0")
+        print("Error: Sum of split ratios must be greater than 0")
+        return False
     
     # Set random seed for reproducibility
-    random.seed(args.seed)
+    random.seed(random_seed)
     
     try:
         # Create combiner and combine datasets
         combiner = YOLOv8ClassFolderCombiner(
-            args.existing_dataset, args.new_classes, args.output
+            existing_dataset_path, new_classes_folder, output_path
         )
-        combiner.combine_datasets(args.existing_percentage, split_ratios)
+        combiner.combine_datasets(existing_percentage, split_ratios)
         print("\n✅ Dataset combination completed successfully!")
+        return True
         
     except Exception as e:
         print(f"\n❌ Error: {e}")
-        return 1
-    
-    return 0
-
-
-if __name__ == "__main__":
-    exit(main())
+        return False
