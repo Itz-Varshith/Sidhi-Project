@@ -302,6 +302,7 @@ const VERIFIED_DIR = path.join(__dirname, 'verified');
 //         console.error("Error saving verified data:", error);
 //         res.status(500).json({
 //             success: false,
+
 //             message: "Failed to store verified images",
 //             error: error.toString()
 //         });
