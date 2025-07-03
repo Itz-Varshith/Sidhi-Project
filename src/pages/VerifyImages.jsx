@@ -5,20 +5,19 @@ import Navbar from "../components/Navbar";
 
 function VerifyImages() {
   const [data, setData] = useState([]);
-
   const [verifiedImages, setVerifiedImages] = useState([]);
-  const [deletedImages, setdeletedImages] = useState([]);
+  const [deletedImages, setDeletedImages] = useState([]);
   const [currentIdx, setCurrentIdx] = useState(0);
-  const [box, setBox] = useState({});
+  const [box, setBox] = useState(null);
   const imageRef = useRef(null);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
-
+  const [lastImageReviewed, setLastImageReviewed] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await axios.get("http://localhost:3001/unverified_images");
         setData(res.data);
-        if (res.data.length > 0) setBox({ ...res.data[0].boundingBox });
+        if (res.data.length > 0) setCurrentIdx(0);
       } catch (err) {
         console.error("Error fetching image data:", err);
       }
@@ -39,101 +38,117 @@ function VerifyImages() {
   }, []);
 
   useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (verifiedImages.length) {
-        const blob = new Blob([JSON.stringify(verifiedImages)], { type: "application/json" });
-        navigator.sendBeacon("http://localhost:3001/verified", blob);
-      }
-      if (deletedImages.length) {
-        const blob = new Blob([JSON.stringify(deletedImages)], { type: "application/json" });
-        navigator.sendBeacon("http://localhost:3001/deleteImage", blob);
-      }
-    };
+    if (data.length > 0 && data[currentIdx]) {
+      setBox({ ...data[currentIdx].boundingBox });
+    }
+  }, [currentIdx, data]);
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [verifiedImages, deletedImages]);
+  // useEffect(() => {
+  //   const handleBeforeUnload = () => {
+  //     if (verifiedImages.length) {
+  //       const blob = new Blob([JSON.stringify(verifiedImages)], { type: "application/json" });
+  //       navigator.sendBeacon("http://localhost:3001/verified", blob);
+  //     }
+  //     if (deletedImages.length) {
+  //       const blob = new Blob([JSON.stringify(deletedImages)], { type: "application/json" });
+  //       navigator.sendBeacon("http://localhost:3001/deleteImage", blob);
+  //     }
+  //   };
+
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
+  //   return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  // }, [verifiedImages, deletedImages]);
 
   const uploadPendingData = async () => {
     try {
+      if (!verifiedImages.length && !deletedImages.length) { alert('No updates to post'); return; }
       if (verifiedImages.length) {
         await axios.post("http://localhost:3001/verified", verifiedImages);
         console.log("Verified images uploaded.");
-        setVerifiedImages([]);
       }
-      // deleting the image logic may be changed as per the backend requirements 
       if (deletedImages.length) {
-        await axios.post("http://localhost:3001/deleteImage", imagePath);
+        await axios.post("http://localhost:3001/deleteImage", { imagePath: deletedImages.map(img => img.imagePath), });
         console.log("Deleted images uploaded.");
-        setdeletedImages([]);
+
       }
+      alert(`${verifiedImages.length} images uploaded, ${deletedImages.length} images deleted`);
+      setVerifiedImages([]);
+      setDeletedImages([]);
+
+
     } catch (err) {
       console.error("Failed to upload verified or deleted images:", err);
     }
   };
 
-  const handleSaveAndNext = () => {
+  const moveToNext = () => {
+    setCurrentIdx((prev) => {
+      if (prev < data.length - 1) return prev + 1;
+      return prev; // stay on last image
+    });
+  };
+
+  const handleSaveAndNext = async () => {
     const item = data[currentIdx];
     const updatedItem = {
       prompt: item.prompt,
       imagePath: item.imagePath,
       boundingBox: box,
     };
+
+    const isLast = currentIdx === data.length - 1;
+
+    // Save the image
     setVerifiedImages((prev) => [...prev, updatedItem]);
-    moveToNext();
-  };
 
-
-  const handleDelete = () => {
-    const item = data[currentIdx];
-    setdeletedImages((prev) => [...prev, { imagePath: item.imagePath }]);
-    moveToNext();
-  };
-
-  const handleSkip = () => {
-    moveToNext();
-  };
-
-  const handlePostUpdates = () => {
-    uploadPendingData();
-  }
-
-  const moveToNext = async () => {
-    const nextIdx = currentIdx + 1;
-    if (nextIdx < data.length) {
-      setCurrentIdx(nextIdx);
-      setBox({ ...data[nextIdx].boundingBox });
+    if (isLast) {
+      alert("All images reviewed. Post the updates for !");
+      setLastImageReviewed(true);
     } else {
-      alert("All images reviewed!");
-      await uploadPendingData();
-      if (window.opener) {
-        window.opener.focus();
-      }
+      // Just move to next
+      moveToNext();
     }
   };
 
-  if (data.length === 0 || !box) return <div>Loading...</div>;
+  const handleDelete = () => {
+    const item = data[currentIdx];
+    setDeletedImages((prev) => [...prev, { imagePath: item.imagePath }]);
+
+    const isLast = currentIdx === data.length - 1;
+    if (isLast) {
+      setLastImageReviewed(true);
+      alert("All images reviewed. Please post the updates.");
+    } else {
+      moveToNext();
+    }
+  };
+
+  const handlePostUpdates = async () => {
+    await uploadPendingData();
+  };
+
+  if (data.length === 0 || !data[currentIdx] || !box) {
+    return <>
+      <Navbar heading="Verify Images" />
+      <div className="text-center mt-10">No unverified images.</div>;
+    </>
+  }
 
   const current = data[currentIdx];
   const imageUrl = `http://localhost:3001/static/${current.imagePath}`;
 
-  console.log(imageUrl);
   const absoluteBox = {
-    x: box.x * imageSize.width,
-    y: box.y * imageSize.height,
-    width: box.width * imageSize.width,
-    height: box.height * imageSize.height
+    x: Math.min(box.x * imageSize.width, imageSize.width),
+    y: Math.min(box.y * imageSize.height, imageSize.height),
+    width: Math.min(box.width * imageSize.width, imageSize.width),
+    height: Math.min(box.height * imageSize.height, imageSize.height),
   };
 
   return (
     <>
       <Navbar heading="Verify Images" />
       <div className="outer-box p-6 font-sans">
-
-
         <div className="verifier-container mx-auto w-[90vw] max-w-[800px] bg-white rounded-lg shadow-lg p-6">
-
-          {/* Header */}
           <div className="header-panel mb-4">
             <p className="text-lg font-semibold text-gray-700 mb-1">
               Prompt: <span className="font-normal">{current.prompt}</span>
@@ -141,9 +156,11 @@ function VerifyImages() {
             <p className="text-sm text-gray-500">
               Image {currentIdx + 1} of {data.length}
             </p>
+            <p className="text-sm text-gray-500">
+              Note : Please post updates after verifying the images
+            </p>
           </div>
 
-          {/* Image Wrapper */}
           <div className="image-wrapper relative inline-block w-full max-w-3xl mx-auto aspect-video bg-gray-100 rounded-md overflow-hidden border border-gray-300">
             <img
               ref={imageRef}
@@ -161,42 +178,50 @@ function VerifyImages() {
                 size={{ width: absoluteBox.width, height: absoluteBox.height }}
                 position={{ x: absoluteBox.x, y: absoluteBox.y }}
                 onDragStop={(e, d) => {
-                  const newX = Math.max(0, Math.min(d.x, imageSize.width - absoluteBox.width));
-                  const newY = Math.max(0, Math.min(d.y, imageSize.height - absoluteBox.height));
-                  setBox(prev => ({
+                  const clampedX = Math.max(0, Math.min(d.x, imageSize.width - absoluteBox.width));
+                  const clampedY = Math.max(0, Math.min(d.y, imageSize.height - absoluteBox.height));
+                  setBox((prev) => ({
                     ...prev,
-                    x: newX / imageSize.width,
-                    y: newY / imageSize.height
+                    x: clampedX / imageSize.width,
+                    y: clampedY / imageSize.height,
                   }));
                 }}
                 onResizeStop={(e, direction, ref, delta, position) => {
-                  const newWidth = Math.min(parseInt(ref.style.width), imageSize.width - position.x);
-                  const newHeight = Math.min(parseInt(ref.style.height), imageSize.height - position.y);
-                  const newX = Math.max(0, Math.min(position.x, imageSize.width - newWidth));
-                  const newY = Math.max(0, Math.min(position.y, imageSize.height - newHeight));
+                  const rawWidth = parseInt(ref.style.width);
+                  const rawHeight = parseInt(ref.style.height);
+                  const clampedWidth = Math.max(1, Math.min(rawWidth, imageSize.width - position.x));
+                  const clampedHeight = Math.max(1, Math.min(rawHeight, imageSize.height - position.y));
+
+                  const clampedX = Math.max(0, Math.min(position.x, imageSize.width - clampedWidth));
+                  const clampedY = Math.max(0, Math.min(position.y, imageSize.height - clampedHeight));
+
                   setBox({
-                    width: newWidth / imageSize.width,
-                    height: newHeight / imageSize.height,
-                    x: newX / imageSize.width,
-                    y: newY / imageSize.height
+                    width: clampedWidth / imageSize.width,
+                    height: clampedHeight / imageSize.height,
+                    x: clampedX / imageSize.width,
+                    y: clampedY / imageSize.height,
                   });
                 }}
                 bounds={imageRef.current ? imageRef.current : "parent"}
                 style={{
                   border: "2px solid red",
                   backgroundColor: "rgba(255, 0, 0, 0.1)",
-                  position: "absolute"
+                  position: "absolute",
                 }}
               />
             )}
           </div>
 
-          {/* Button Bar */}
           <div className="button-bar mt-6 flex justify-center gap-4">
-            <button onClick={handleSaveAndNext}>Save</button>
-            {/* <button onClick={handleSkip}>Skip</button> */}
-            <button onClick={handleDelete}>Delete</button>
-            <button onClick={handlePostUpdates}>Post Updates</button>
+            <button type="button" onClick={handleSaveAndNext} disabled={lastImageReviewed}>
+              Next
+            </button>
+            <button type="button" onClick={handleDelete} disabled={lastImageReviewed}>
+              Delete
+            </button>
+            <button type="button" onClick={handlePostUpdates}>
+              Post Updates
+            </button>
           </div>
         </div>
       </div>

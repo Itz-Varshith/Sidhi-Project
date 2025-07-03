@@ -14,6 +14,6 @@ app.use('/', mainRouter);
 
 app.listen(PORT, () => {
     console.log(`Frame Capture Server running at http://localhost:${PORT}`);
-    console.log('Serving static files from:', path.join(__dirname, 'public'));
+    // console.log('Serving static files from:', path.join(__dirname, 'public'));
 
 });

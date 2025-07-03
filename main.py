@@ -15,7 +15,12 @@ privacy_mode = False
 patient_privacy_mode = False
 
 # Webcam init with explicit Linux backend (CAP_V4L2)
-camera = cv2.VideoCapture(0, cv2.CAP_V4L2)
+camera = cv2.VideoCapture(0)
+
+if not camera.isOpened():
+    print("❌ Failed to open webcam")
+else:
+    print("✅ Webcam opened successfully")
 
 def tail(filepath, n=10):
     with open(filepath, 'r') as f:
@@ -88,4 +93,4 @@ def cleanup():
         camera.release()
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5000, debug=False)
+    socketio.run(app, host='0.0.0.0', port=3000, debug=False)

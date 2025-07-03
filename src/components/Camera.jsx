@@ -15,7 +15,8 @@ const Camera = () => {
 
   const handleVerifyImages = async () => {
       console.log('Redirecting to verification');
-      const newTab = window.open('/verify-images', '_blank');
+
+      window.open(`${window.location.origin}/verify-images`, '_blank');
   }
 
   const handlePatientPrivacy = () => {
