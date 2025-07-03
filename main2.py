@@ -8,6 +8,10 @@ import threading
 import queue
 from flask_cors import CORS
 from ultralytics import YOLO
+import subprocess
+
+
+
 
 app = Flask(__name__)
 CORS(app)
@@ -26,7 +30,7 @@ camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 frame_queue = queue.Queue(maxsize=1)
 stop_event = threading.Event()
 
-model_path = r"C:\Users\OMEN\PycharmProjects\object_detection\yolov8\runs\aiims_weights\aiim_yolov8.pt"  #update with original file path
+model_path = "backend/weights/incrementalv8.pt" 
 model = YOLO(model_path)  # Automatically uses CUDA if available
 
 # Get class names from the model
@@ -108,6 +112,12 @@ def get_daily_logs():
         with open(file_path, 'r') as f:
             return jsonify(json.load(f))
     return jsonify([])
+
+@app.route('/start_training', methods=['POST'])
+def start_training():
+    # Adjust the path to auto_train.py as needed
+    subprocess.Popen(["python", "auto_train.py"])
+    return jsonify({"status": "Training started"})
 
 @app.route('/get_ventilator_data')
 def get_ventilator_data():
