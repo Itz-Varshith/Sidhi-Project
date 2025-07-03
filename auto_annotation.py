@@ -82,7 +82,7 @@ if __name__ == "__main__":
     model, processor = load_model()
 
     FRAMES_DIR = os.path.join('backend', 'routes', 'frames')
-    UNVERIFIED_DIR = os.path.join('public', 'unverified')
+    UNVERIFIED_DIR = os.path.join('backend','public', 'unverified')
 
     os.makedirs(UNVERIFIED_DIR, exist_ok=True)
 
@@ -129,5 +129,5 @@ if __name__ == "__main__":
         with open(save_bbox_path, 'w') as f:
             f.write(yolov8_txt)
 
-        print(f"✅ Saved to {UNVERIFIED_DIR}: {base_name}.jpg, _prompt.txt, _bbox.txt")
+        print(f" Saved to {UNVERIFIED_DIR}: {base_name}.jpg, _prompt.txt, _bbox.txt")
 
