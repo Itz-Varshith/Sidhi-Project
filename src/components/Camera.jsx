@@ -196,7 +196,7 @@ const Camera = () => {
 
       <div className="flex-1 w-full h-[10vh] flex justify-center items-center border border-gray-300 rounded-md bg-gray-100 p-4">
         <img
-          src="http://10.2.35.160:5000/video"
+          src="http://127.0.0.1:3000/video"
           alt="Live Camera Feed"
           className="w-full h-full object-contain rounded-md shadow-md"
         />

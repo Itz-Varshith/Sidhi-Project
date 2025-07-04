@@ -1,25 +1,40 @@
-from transformers import AutoProcessor, AutoModelForImageTextToText, BitsAndBytesConfig
-import torch
-import bitsandbytes
-import re
 import os
+import time
+from transformers import AutoProcessor, AutoModelForImageTextToText
 from qwen_vl_utils import process_vision_info
+import re 
 from PIL import Image
 import shutil
+import threading
+
+
+def check_pair(file_list, file_name):
+    base_name, ext = os.path.splitext(file_name)
+    if ext.lower() == ".jpg":
+        required = base_name + ".txt"
+    elif ext.lower() == ".txt":
+        required = base_name + ".jpg"
+    else:
+        return False  # skip unknown file types
+
+    return required in file_list
+
+def delete_file(frame_dir, image, txt):
+    image_path = os.path.join(frame_dir, image)
+    txt_path = os.path.join(frame_dir, txt)
+    print("Removing:", image_path, txt_path)
+    try:
+        if os.path.exists(image_path):
+            os.remove(image_path)
+        if os.path.exists(txt_path):
+            os.remove(txt_path)
+    except Exception as e:
+        print(f"Error deleting files: {e}")
 
 def load_model():
-    processor = AutoProcessor.from_pretrained("Qwen/Qwen2.5-VL-7B-Instruct")
-    bnb_config = BitsAndBytesConfig(
-        load_in_4bit=True,
-        bnb_4bit_use_double_quant=True,
-        bnb_4bit_quant_type="nf4"
-    )
-    model = AutoModelForImageTextToText.from_pretrained(
-        "Qwen/Qwen2.5-VL-7B-Instruct",
-        quantization_config=bnb_config,
-        device_map="auto"
-    )
-    return model, processor
+    model = AutoModelForImageTextToText.from_pretrained("qwen2.5-vl-7b-instruct-quantized",device_map = "auto")
+    processor = AutoProcessor.from_pretrained("qwen2.5-vl-7b-instruct-quantized")
+    return model,processor
 
 def generate_bbox(image_path, object_class, model, processor):
     messages = [
@@ -50,7 +65,6 @@ def generate_bbox(image_path, object_class, model, processor):
     inputs = processor(
         text=[text],
         images=image_inputs,
-        videos=video_inputs,
         padding=True,
         return_tensors="pt",
     ).to("cuda")
@@ -76,58 +90,84 @@ def convert_to_yolov8(bbox, img_width, img_height):
     y_center = (bbox[1] + bbox[3]) / 2 / img_height
     width = (bbox[2] - bbox[0]) / img_width
     height = (bbox[3] - bbox[1]) / img_height
-    return f"0 {x_center:.6f} {y_center:.6f} {width:.6f} {height:.6f}"
+    return f"{x_center:.6f} {y_center:.6f} {width:.6f} {height:.6f}"
+
+def main(frame_dir,image,txt,model,processor):
+    # pass the input to the model to get bbox
+    des_folder = os.path.join("Sidhi-Project","backend","public","unverified")
+    base, ext = os.path.splitext(image)
+    image_path = os.path.join(frame_dir,image)
+    txt_path = os.path.join(frame_dir,txt)
+    with open(txt_path) as f:
+        object_class = f.read().strip()
+     
+    output = generate_bbox(image_path=image_path,object_class=object_class,model=model,processor=processor)
+    if output:
+        # img = Image.open(image_path)
+        # img_width = img.width
+        # img_height = img.height
+        with Image.open(image_path) as img:
+            img_width = img.width
+            img_height = img.height
+        # change it to yolov8 formate
+        convert_yolo_formate = convert_to_yolov8(output,img_height=img_height,img_width=img_width)
+        # save the image,prompt, box
+        # 1st image 
+        des_path = os.path.join(des_folder,image)
+        shutil.move(image_path,des_path)
+        # prompt 
+        prompt_path = base + "_prompt.txt"
+        des_prompt = os.path.join(des_folder,prompt_path)
+        with open(des_prompt,"w") as f:
+            f.write(object_class)
+        # bbox
+        bbox = base + "_bbox.txt"
+        des_bbox = os.path.join(des_folder,bbox)
+        with open(des_bbox,"w") as f:
+            f.write(convert_yolo_formate)
+    # delelte teh file
+    delete_file(frame_dir, base + ".jpg", base + ".txt")
+
+
+def monitor_dir():
+    frame_dir = os.path.join("Sidhi-Project", "backend", "routes", "frames")
+
+    seen_files = set()
+    # laod the model
+    model,processor = load_model()
+    while True:
+        try:
+            current_files = set(os.listdir(frame_dir))
+            new_files = current_files - seen_files
+            seen_files.update(new_files)
+
+            for file in list(new_files):
+                if file.endswith((".jpg", ".txt")):
+                    base, ext = os.path.splitext(file)
+                    pair_file = base + (".txt" if ext == ".jpg" else ".jpg")
+
+                    if pair_file in current_files:
+                        print(f"Pair found: {file}, {pair_file}")
+                        main(frame_dir, base + ".jpg", base + ".txt",model,processor)
+                        # Remove from seen_files so it's not double-processed
+                        seen_files.discard(base + ".jpg")
+                        seen_files.discard(base + ".txt")
+
+        except KeyboardInterrupt:
+            print("Stopped by user")
+            break
+        except Exception as e:
+            print(f"Error in loop: {e}")
+            time.sleep(5)
 
 if __name__ == "__main__":
-    model, processor = load_model()
+    thread = threading.Thread(target=monitor_dir, daemon=True)
+    thread.start()
 
-    FRAMES_DIR = os.path.join('backend', 'routes', 'frames')
-    UNVERIFIED_DIR = os.path.join('backend','public', 'unverified')
-
-    os.makedirs(UNVERIFIED_DIR, exist_ok=True)
-
-    if not os.path.exists(FRAMES_DIR):
-        print(f"Directory not found: {FRAMES_DIR}")
-        exit(1)
-
-    files = os.listdir(FRAMES_DIR)
-    image_files = [f for f in files if f.endswith('.jpg')]
-
-    for image_file in image_files:
-        base_name = os.path.splitext(image_file)[0]
-        txt_file = f"{base_name}.txt"
-        txt_path = os.path.join(FRAMES_DIR, txt_file)
-        image_path = os.path.join(FRAMES_DIR, image_file)
-
-        if not os.path.exists(txt_path):
-            print(f"Skipping {image_file}: prompt file not found.")
-            continue
-
-        with open(txt_path, 'r') as f:
-            prompt = f.read().strip()
-
-        print(f"Processing: {image_file} with prompt: {prompt}")
-
-        bbox = generate_bbox(image_path, prompt, model, processor)
-        if bbox is None:
-            print(f"No bbox found for {image_file}. Skipping.")
-            continue
-
-        # Load image size
-        img = Image.open(image_path)
-        yolov8_txt = convert_to_yolov8(bbox, img.width, img.height)
-
-        # Define save paths
-        save_image_path = os.path.join(UNVERIFIED_DIR, image_file)
-        save_prompt_path = os.path.join(UNVERIFIED_DIR, f"{base_name}_prompt.txt")
-        save_bbox_path = os.path.join(UNVERIFIED_DIR, f"{base_name}_bbox.txt")
-
-        # Copy image and save annotation files
-        shutil.copy(image_path, save_image_path)
-        with open(save_prompt_path, 'w') as f:
-            f.write(prompt)
-        with open(save_bbox_path, 'w') as f:
-            f.write(yolov8_txt)
-
-        print(f" Saved to {UNVERIFIED_DIR}: {base_name}.jpg, _prompt.txt, _bbox.txt")
-
+    print("Monitoring thread started. Press Ctrl+C to exit.")
+    
+    try:
+        while True:
+            time.sleep(1)  # Main thread stays alive
+    except KeyboardInterrupt:
+        print("Shutting down...")
