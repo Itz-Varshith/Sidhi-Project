@@ -160,6 +160,8 @@ from flask_cors import CORS
 from ultralytics import YOLO
 import subprocess
 
+from auto_train import run_autotrain
+
 app = Flask(__name__)
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -280,6 +282,12 @@ def get_paramonitor_data():
         with open(file_path, 'r') as f:
             return jsonify(json.load(f)[-10:])
     return jsonify([])
+
+@app.route('/autotrain', methods=['GET'])
+def train_route():
+    result = run_autotrain()
+    return jsonify(result)
+
 
 @atexit.register
 def cleanup():
