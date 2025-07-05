@@ -386,7 +386,7 @@ const VERIFIED_DIR = path.join(__dirname, 'verified');
         console.error('Error calling Flask:', error.message);
 
       }
-      // End of python script triggering  part 
+       
 
       res.json({
         success: true,
