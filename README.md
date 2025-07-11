@@ -13,9 +13,17 @@ If you are developing a production application, we recommend using TypeScript wi
 ## System Requirments
 ### Hardware Requirments
 OS: Ubuntu 20.04+ / Windows 10+
+
+
 GPU: NVIDIA GPU with minimum 12 GB VRAM (e.g., RTX 3080/3090, A100 preferred)
+
+
 RAM: 16 GB minimum
+
+
 Disk: 10+ GB free space
+
+
 ### Software Requirements 
 | Tool    | Version                                   |
 | ------- | ----------------------------------------- |
