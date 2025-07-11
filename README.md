@@ -58,6 +58,7 @@ pip install flask
 pip install transformers
 pip install accelerate
 pip install Pillow
+pip install ultralytics
 ```
 3. Clone the repository
 ```bash
