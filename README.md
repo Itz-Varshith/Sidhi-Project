@@ -10,11 +10,31 @@ Currently, two official plugins are available:
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## System Requirements 
+| Tool    | Version                                   |
+| ------- | ----------------------------------------- |
+| Node.js | 18.x or 20.x                              |
+| Python  | 3.9 or 3.10                               |
+| CUDA    | 11.8 or 12.x                              |
+| PyTorch | 2.0+                                      |
+| pip     | Latest                                    |
 
 ## Instruction to Setup 
 
 1. Create Python virtual environment
 ```bash
-python -m venv venv
-source venv/bin/activate  # Linux/macOS
-venv\Scripts\activate     # Windows 
+python -m venv sidhi
+source sidhi/bin/activate  # Linux/macOS
+sidhi\Scripts\activate     # Windows
+```
+2. Install Dependencis
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126 # Install torch according to your cuda
+pip install opencv-python
+pip install flask
+pip install transformers
+pip install accelerate
+pip install Pillow
+```
+
+
