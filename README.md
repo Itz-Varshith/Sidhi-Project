@@ -44,11 +44,37 @@ sidhi\Scripts\activate     # Windows
 2. Install Dependencis
 ```bash
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126 # Install torch according to your cuda
+pip install qwen_vl_utils
 pip install opencv-python
 pip install flask
 pip install transformers
 pip install accelerate
 pip install Pillow
+```
+3. Clone the repository
+```bash
+git clone
+cd Sidhi-Project
+```
+4. Open the terminal and run the backend python file
+```bash
+python main2_new.py
+```
+5. Open the new terminal and the run the js node for forntend
+```bash
+cd src
+npm run dev
+cd ..
+```
+6. Open a new terminal to run main Router file
+```bash
+cd backend
+node index.js
+cd ..
+```
+7. Open a new terminal run the auto annotation script
+```bash
+python auto_annotation.py
 ```
 
 
