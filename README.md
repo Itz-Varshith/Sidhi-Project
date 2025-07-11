@@ -12,16 +12,16 @@ Currently, two official plugins are available:
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
 ## System Requirments
 ### Hardware Requirments
-OS: Ubuntu 20.04+ / Windows 10+
+  OS: Ubuntu 20.04+ / Windows 10+
 
 
-GPU: NVIDIA GPU with minimum 12 GB VRAM (e.g., RTX 3080/3090, A100 preferred)
+  GPU: NVIDIA GPU with minimum 12 GB VRAM (e.g., RTX 3080/3090, A100 preferred)
 
 
-RAM: 16 GB minimum
+  RAM: 16 GB minimum
 
 
-Disk: 10+ GB free space
+  Disk: 10+ GB free space
 
 
 ### Software Requirements 
