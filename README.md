@@ -1,15 +1,22 @@
-# React + Vite
+# Sidhi ICU Event tracking Project
+This project is an end-to-end system for automatic image annotation and incremental training of a YOLOv8 model, tailored specifically for real-time monitoring of ICU events. The goal is to assist doctors and medical staff by providing intelligent visual tracking and alert capabilities through a web-based interface.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Key features of the project:
 
-Currently, two official plugins are available:
+ - Live Frame Capture: Continuously captures frames from an MJPEG stream.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+ - AI-Powered Annotation: Uses a multimodal Vision-Language Model (Qwen-VL) to auto-detect and localize critical objects or people (e.g., patient, nurse, doctor) from user prompts.
 
-## Expanding the ESLint configuration
+ - YOLOv8-Compatible Labeling: Bounding box outputs are formatted directly into YOLOv8-style annotations for seamless training.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+ - User-in-the-Loop Verification: Doctors or annotators can review and verify predicted labels via a web dashboard before saving.
+
+ - Incremental Learning: Once enough verified samples are collected, the backend automatically triggers a retraining of the YOLOv8 model to improve future detections.
+
+ - Web Interface: Built with Node.js and Express, the system provides a clean, user-friendly UI to manage captured data, verify outputs, and track model improvement over time.
+
+This system is designed for scalability, speed, and usability in medical environments, allowing healthcare professionals to quickly build and adapt computer vision systems without needing deep technical knowledge.
+
 ## System Requirments
 ### Hardware Requirments
 
@@ -54,7 +61,7 @@ pip install Pillow
 ```
 3. Clone the repository
 ```bash
-git clone
+git clone https://github.com/Itz-Varshith/Sidhi-Project.git
 cd Sidhi-Project
 ```
 4. Open the terminal and run the backend python file
@@ -77,5 +84,9 @@ cd ..
 ```bash
 python auto_annotation.py
 ```
+
+
+
+
 
 
